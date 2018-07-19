@@ -2,7 +2,6 @@
 #define MEMORYVM_H
 
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -27,7 +26,7 @@ void *allocateArray(size_t elementSize, size_t elementCount);
  * @param subarrays
  * @return
  */
-void *allocateOuterArray(size_t subarrays);
+void **allocateOuterArray(size_t subarrays);
 
 /**
  * @brief allocateArray2D
@@ -42,26 +41,26 @@ void **allocateArray2D(size_t elementSize, size_t subarrays, size_t *elementCoun
  * @brief acquire
  * @param memory
  */
-void acquire(void *memory);
+void *acquire(void *memory);
 
 /**
  * @brief acquireArray2D
  * @param array
  */
-void acquireArray2D(void **array);
+void **acquireArray2D(void **array);
 
 /**
  * @brief release
  * @param memory
  * @return
  */
-bool release(void *memory);
+int release(void *memory);
 
 /**
  * @brief releaseArray2D
  * @param array
  * @return
  */
-bool releaseArray2D(void **array);
+int releaseArray2D(void **array);
 
 #endif /* MEMORYVM_H */

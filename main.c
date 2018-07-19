@@ -1,10 +1,6 @@
-/**
 #include "memoryVM.h"
 #include "memoryVMObject.h"
-**/
-#include <stdlib.h>
-#include <stdbool.h>
-#include <stdio.h>
+#include "memoryVMTests.h"
 
 
 typedef struct _safeLogger
@@ -13,11 +9,10 @@ typedef struct _safeLogger
 } safeLogger;
 
 // constructor
-bool initSafeLogger(void* memory, void* param)
+int initSafeLogger(void* memory, void* param)
 {
     safeLogger *logger = (safeLogger*) memory;
     const char *path   = (const char*) param;
-
     logger->file = fopen(path, "a");
     return logger->file != NULL;
 }
@@ -26,20 +21,19 @@ bool initSafeLogger(void* memory, void* param)
 void closeSafeLogger(void* memory)
 {
     safeLogger *logger = (safeLogger *) memory;
-
     fclose(logger->file);
-    printf("ok\n");
 }
 
 int main()
 {
-    void (**f)(void *) = malloc(sizeof(void (*)(void *)) + sizeof(size_t));
-    size_t *counter = (size_t *)(f + 1);
-    *f = closeSafeLogger;
-    safeLogger logger;
-    logger.file = fopen("testfile.txt", "a");
-    (*f)(&logger);
-    *counter = 1;
-    printf("counter: %zu\n", *counter);
+    test_allocate_zero();
+    test_allocate_nonzero();
+    test_allocateArray_zero();
+    test_allocateArray_nonzero();
+    test_allocateArray2D_nonzero_nonNULL();
+    test_allocateArray2D_nonzero_NULL();
+    test_allocateArray2D_zeroSize_NULL();
+    test_allocateArray2D_zeroSubs_NULL();
+    test_allocateArray2D_zeros_NULL();
     return 0;
 }

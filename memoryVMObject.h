@@ -33,20 +33,20 @@ void* allocateNew2(dataDef2* def, void* param1, void* param2);
  * @param size
  * @return
  */
-dataDef0* createDataDef0(size_t size, bool(*ctor)(void*), void(*dtor)(void*));
+dataDef0* createDataDef0(size_t size, int(*ctor)(void*), void(*dtor)(void*));
 
 /**
  * @brief createDataDef1
  * @param size
  * @return
  */
-dataDef1* createDataDef1(size_t size, bool(*ctor)(void*, void*), void(*dtor)(void*));
+dataDef1* createDataDef1(size_t size, int(*ctor)(void*, void*), void(*dtor)(void*));
 
 /**
  * @brief createDataDef2
  * @param size
  * @return
  */
-dataDef2* createDataDef2(size_t size, bool(*ctor)(void*, void*, void*), void(*dtor)(void*));
+dataDef2* createDataDef2(size_t size, int(*ctor)(void*, void*, void*), void(*dtor)(void*));
 
 #endif /* MEMORYVMOBJECT_H */

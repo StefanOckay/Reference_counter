@@ -6,19 +6,18 @@
  * @param size
  * @return
  */
-void *allocate(size_t size) {
-    if (size <= 0) {
-        fprintf(stderr, "Invalid block size: %zu\n", size);
+void *allocate(size_t size)
+{
+    void(**dtor__counter__memory)(void *) = malloc(size + sizeof(size_t) + sizeof(void *));
+    if (dtor__counter__memory == NULL) {
+        perror("dtor__counter__memory");
         return NULL;
     }
-    size_t *counter__array = malloc(size + sizeof(size_t));
-    if (counter__array == NULL) {
-        perror("Memory allocation failure.");
-        return NULL;
-    }
-    memset(counter__array, 0, size + sizeof(size_t));
-    *counter__array = 1;
-    return (void *)(counter__array + 1);
+    *dtor__counter__memory = NULL;
+    size_t *counter__memory = (size_t *)(dtor__counter__memory + 1);
+    memset(counter__memory, 0, size + sizeof(size_t));
+    *counter__memory = 1;
+    return (void *)(counter__memory + 1);
 }
 
 /**
@@ -27,8 +26,9 @@ void *allocate(size_t size) {
  * @param elementCount
  * @return
  */
-void *allocateArray(size_t elementSize, size_t elementCount) {
-    return allocate(elementCount * elementSize);
+void *allocateArray(size_t elementSize, size_t elementCount)
+{
+    return allocate(elementSize * elementCount);
 }
 
 /**
@@ -36,22 +36,19 @@ void *allocateArray(size_t elementSize, size_t elementCount) {
  * @param subarrays number of arrays pointed to by pointers of array being allocated
  * @return the allocated array
  */
-void *allocateOuterArray(size_t subarrays) {
-    if (subarrays <= 0) {
-        fprintf(stderr, "Invalid number of subarrays: %zu\n", subarrays);
-        return NULL;
-    }
+void **allocateOuterArray(size_t subarrays)
+{
     size_t range = subarrays * sizeof(void *) + 2 * sizeof(size_t);
     size_t *length__counter__array = malloc(range);
     if (length__counter__array == NULL) {
-        perror("Memory allocation failure.");
+        perror("length__counter__array");
         return NULL;
     }
     memset(length__counter__array, 0, range);
     *length__counter__array = subarrays;
-    length__counter__array += 1;
-    *length__counter__array = 1;
-    return (void *)(length__counter__array + 1);
+    size_t *counter__array = length__counter__array + 1;
+    *counter__array = 1;
+    return (void **)(counter__array + 1);
 }
 
 /**
@@ -61,62 +58,65 @@ void *allocateOuterArray(size_t subarrays) {
  * @param elementCounts
  * @return
  */
-void **allocateArray2D(size_t elementSize, size_t subarrays, size_t *elementCounts) {
-    void **arrays = allocateOuterArray(subarrays);
-    if (arrays == NULL) {
+void **allocateArray2D(size_t elementSize, size_t subarrays, size_t *elementCounts)
+{
+    void **array2D = allocateOuterArray(subarrays);
+    if (array2D == NULL) {
         return NULL;
     }
-    size_t row_elements;
+    size_t row_elements = subarrays;
     for (size_t i = 0; i < subarrays; i++) {
-        if (elementCounts == NULL) {
-            row_elements = subarrays;
-        } else {
+        if (elementCounts != NULL) {
             row_elements = elementCounts[i];
         }
-        arrays[i] = allocateArray(elementSize, row_elements);
-        if (arrays[i] == NULL) {
+        array2D[i] = allocateArray(elementSize, row_elements);
+        if (array2D[i] == NULL) {
             for (size_t j = 0; j < i; j++) {
-                free((size_t *)arrays[j] - 1);
+                free((size_t *)array2D[j] - 1);
             }
-            free((size_t *)arrays - 1);
-            perror("Memory allocation failure.");
+            free((size_t *)array2D - 1);
             return NULL;
         }
     }
-    return arrays;
+    return array2D;
 }
 
 /**
  * @brief acquire
  * @param memory
  */
-void acquire(void *memory) {
+void *acquire(void *memory)
+{
     if (memory == NULL) {
-        return;
+        return NULL;
     }
-    size_t *counter = (size_t *)memory - 1;
-    if (counter == 0) {
-        return;
+    size_t *counter__memory = (size_t *)memory - 1;
+    if (counter__memory == 0) {
+        return NULL;
     }
-    *counter += 1;
+    *counter__memory += 1;
+    return memory;
 }
 
 /**
  * @brief acquireArray2D
  * @param array
  */
-void acquireArray2D(void **array) {
+void **acquireArray2D(void **array)
+{
     if (array == NULL) {
-        return;
+        return NULL;
     }
-    if (*((size_t *)array - 1) == 0) {
-        return;
+    size_t *counter_array = (size_t *)array - 1;
+    if (*counter_array == 0) {
+        return NULL;
     }
     acquire(array);
     size_t subarrays = *((size_t *)array - 2);
     for (size_t i = 0; i < subarrays; i++) {
         acquire(array[i]);
     }
+    return array;
 }
 
 /**
@@ -124,17 +124,22 @@ void acquireArray2D(void **array) {
  * @param memory
  * @return
  */
-bool release(void *memory) {
+int release(void *memory)
+{
     if (memory == NULL) {
-        return false;
+        return 1;
     }
-    size_t *counter = (size_t *)memory - 1;
-    if (*counter == 1) {
-        free(counter);
-        return true;
+    size_t *counter__memory = (size_t *)memory - 1;
+    void(**dtor__counter__memory)(void *) = (void(**)(void *))counter__memory - 1;
+    if (*counter__memory == 1) {
+        if (*dtor__counter__memory != NULL) {
+            (*dtor__counter__memory)(memory);
+        }
+        free(dtor__counter__memory);
+        return 0;
     }
-    *counter -= 1;
-    return false;
+    *counter__memory -= 1;
+    return 1;
 }
 
 /**
@@ -142,20 +147,21 @@ bool release(void *memory) {
  * @param array
  * @return
  */
-bool releaseArray2D(void **array) {
+int releaseArray2D(void **array)
+{
     if (array == NULL) {
-        return false;
+        return 1;
     }
-    size_t lena = *((size_t *)array - 2);
-    for (size_t i = 0; i < lena; i++) {
+    size_t length__counter__array = *((size_t *)array - 2);
+    for (size_t i = 0; i < length__counter__array; i++) {
         release(array[i]);
     }
-    size_t *counter = (size_t *)array - 1;
-    if (*counter == 1) {
-        size_t *whole_memblock = counter - 1;
-        free(whole_memblock);
-        return true;
+    size_t *counter__array = (size_t *)array - 1;
+    if (*counter__array == 1) {
+        size_t *length__counter__array = counter__array - 1;
+        free(length__counter__array);
+        return 0;
     }
-    *counter -= 1;
-    return false;
+    *counter__array -= 1;
+    return 1;
 }
