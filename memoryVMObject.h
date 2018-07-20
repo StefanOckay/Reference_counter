@@ -1,31 +1,16 @@
 #ifndef MEMORYVMOBJECT_H
 #define MEMORYVMOBJECT_H
 
-#include "dataDef.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 
 /**
- * @brief allocateNew0
- * @param def
+ * @brief allocateNew
+ * @param size
+ * @param params
  * @return
  */
-void* allocateNew0(dataDef0* def);
-
-/**
- * @brief allocateNew1
- * @param def
- * @param param1
- * @return
- */
-void* allocateNew1(dataDef1* def, void* param1);
-
-/**
- * @brief allocateNew2
- * @param def
- * @param param1
- * @param param2
- * @return
- */
-void* allocateNew2(dataDef2* def, void* param1, void* param2);
+void *allocateNew(size_t size, int(*ctor)(void *, void **), void(*dtor)(void *), void **params);
 
 #endif /* MEMORYVMOBJECT_H */

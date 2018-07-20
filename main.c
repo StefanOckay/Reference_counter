@@ -9,16 +9,16 @@ typedef struct _safeLogger
 } safeLogger;
 
 // constructor
-int initSafeLogger(void* memory, void* param)
+int initSafeLogger(void *memory, void **params)
 {
     safeLogger *logger = (safeLogger*) memory;
-    const char *path   = (const char*) param;
+    const char *path   = (const char*) *params;
     logger->file = fopen(path, "a");
     return logger->file != NULL;
 }
 
 // destructor
-void closeSafeLogger(void* memory)
+void closeSafeLogger(void *memory)
 {
     safeLogger *logger = (safeLogger *) memory;
     fclose(logger->file);
@@ -26,6 +26,14 @@ void closeSafeLogger(void* memory)
 
 int main()
 {
+    char *path = "testfile.txt";
+    void **params;
+    *params = path;
+    safeLogger *logger = allocateNew(sizeof(safeLogger), initSafeLogger, closeSafeLogger, params);
+    if(logger != NULL) {
+        release(logger);
+    }
+    return 0;
     test_allocate_zero();
     test_allocate_nonzero();
     test_allocateArray_zero();
@@ -35,5 +43,4 @@ int main()
     test_allocateArray2D_zeroSize_NULL();
     test_allocateArray2D_zeroSubs_NULL();
     test_allocateArray2D_zeros_NULL();
-    return 0;
 }
