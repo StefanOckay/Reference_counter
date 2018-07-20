@@ -16,7 +16,7 @@ void *allocateNew(size_t size, int(*ctor)(void *, void **), void(*dtor)(void *),
     *dtor__counter__memory = dtor;
     size_t *counter__memory = (size_t *)(dtor__counter__memory + 1);
     void *memory = (void *)(counter__memory + 1);
-    if (!ctor(memory, params)) {
+    if (ctor(memory, params)) {
         free(dtor__counter__memory);
         return NULL;
     }

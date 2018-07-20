@@ -21,3 +21,11 @@ void test_allocateArray2D_zeroSize_NULL();
 void test_allocateArray2D_zeroSubs_NULL();
 
 void test_allocateArray2D_zeros_NULL();
+
+int initArray(void *array, void *dims[2]);
+
+void freeArray(void *array);
+
+void test_allocateNew_noParams();
+
+void test_allocateNew();

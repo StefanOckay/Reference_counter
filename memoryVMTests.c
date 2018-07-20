@@ -145,3 +145,58 @@ void test_allocateArray2D_zeros_NULL()
     free(length__counter__array);
     printf("test_allocateArray2D_zeros_NULL: passed\n");
 }
+
+int initArray(void *array, void *dims[2])
+{
+    size_t element_size;
+    size_t elements;
+    if (dims == NULL) {
+        element_size = sizeof(int);
+        elements = 5;
+    } else {
+        element_size = *((size_t *) dims[0]);
+        elements = *((size_t *) dims[1]);
+    }
+    memset(array, 0, element_size * elements);
+    return 0;
+}
+
+void freeArray(void *array)
+{
+    (void)array;
+}
+
+void test_allocateNew_noParams() {
+    size_t el_size = sizeof(int);
+    size_t els = 5;
+    const size_t size = el_size * els;
+    int *array = allocateNew(size, initArray, freeArray, NULL);
+    for (int i = 0; i < els; i++) {
+        assert(array[i] == 0);
+    }
+    size_t *counter__array = (size_t *)array - 1;
+    assert(*counter__array == 1);
+    void (**dtor__counter__array)(void *) = (void (**)(void *))counter__array - 1;
+    assert(*dtor__counter__array == freeArray);
+    free(dtor__counter__array);
+    printf("test_allocateNew_noParams: passed\n");
+}
+
+void test_allocateNew() {
+    void *dims[2];
+    size_t el_size = sizeof(int);
+    size_t els = 5;
+    dims[0] = &el_size;
+    dims[1] = &els;
+    const size_t size = el_size * els;
+    int *array = allocateNew(size, initArray, freeArray, dims);
+    for (int i = 0; i < els; i++) {
+        assert(array[i] == 0);
+    }
+    size_t *counter__array = (size_t *)array - 1;
+    assert(*counter__array == 1);
+    void (**dtor__counter__array)(void *) = (void (**)(void *))counter__array - 1;
+    assert(*dtor__counter__array == freeArray);
+    free(dtor__counter__array);
+    printf("test_allocateNew: passed\n");
+}
