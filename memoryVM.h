@@ -35,7 +35,7 @@ void **allocateOuterArray(size_t subarrays);
  * @param elementCounts
  * @return
  */
-void **allocateArray2D(size_t elementSize, size_t subarrays, size_t *elementCounts);
+void *allocateArray2D(size_t elementSize, size_t subarrays, size_t *elementCounts);
 
 /**
  * @brief acquire
@@ -49,7 +49,7 @@ void *acquire(void *memory);
  * @param array
  * @return
  */
-void **acquireArray2D(void **array);
+void *acquireArray2D(void *array2D);
 
 /**
  * @brief release
@@ -63,6 +63,6 @@ int release(void *memory);
  * @param array
  * @return
  */
-int releaseArray2D(void **array);
+int releaseArray2D(void *array2D);
 
 #endif /* MEMORYVM_H */

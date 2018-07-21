@@ -1,6 +1,26 @@
 #include "memoryVMTests.h"
 
 
+int initArray(void *array, void *dims[2])
+{
+    size_t element_size;
+    size_t elements;
+    if (dims == NULL) {
+        element_size = sizeof(int);
+        elements = 5;
+    } else {
+        element_size = *((size_t *) dims[0]);
+        elements = *((size_t *) dims[1]);
+    }
+    memset(array, 0, element_size * elements);
+    return 0;
+}
+
+void freeArray(void *array)
+{
+    (void)array;
+}
+
 void test_allocate_zero()
 {
     int *memory = allocate(0);
@@ -33,7 +53,7 @@ void test_allocateArray2D()
     for (size_t i = 0; i < subarrays; i++) {
         counts[i] = i + 1;
     }
-    int **array = (int **)allocateArray2D(sizeof(int), subarrays, counts);
+    int **array = allocateArray2D(sizeof(int), subarrays, counts);
     size_t *counter__array = (size_t *)array - 1;
     assert(*counter__array == 1);
     size_t *length__counter__array = counter__array - 1;
@@ -57,7 +77,7 @@ void test_allocateArray2D()
 void test_allocateArray2D_NULL()
 {
     const size_t subarrays = 5;
-    int **array = (int **)allocateArray2D(sizeof(int), subarrays, NULL);
+    int **array = allocateArray2D(sizeof(int), subarrays, NULL);
     size_t *counter__array = (size_t *)array - 1;
     assert(*counter__array == 1);
     size_t *length__counter__array = counter__array - 1;
@@ -119,26 +139,6 @@ void test_allocateArray2D_allzeros()
     assert(*length__counter__array == 0);
     free(length__counter__array);
     printf("test_allocateArray2D_allzeros: ok\n");
-}
-
-int initArray(void *array, void *dims[2])
-{
-    size_t element_size;
-    size_t elements;
-    if (dims == NULL) {
-        element_size = sizeof(int);
-        elements = 5;
-    } else {
-        element_size = *((size_t *) dims[0]);
-        elements = *((size_t *) dims[1]);
-    }
-    memset(array, 0, element_size * elements);
-    return 0;
-}
-
-void freeArray(void *array)
-{
-    (void)array;
 }
 
 void test_allocateNew_noParams() {
@@ -271,4 +271,33 @@ void test_release_afterAllocateNewAcquire() {
     assert(*dtor == freeArray);
     free(dtor);
     printf("test_release_afterAllocateNewAcquire: ok\n");
+}
+
+void test_releaseArray2D_afterAllocateArray2D() {
+    const size_t subarrays = 5;
+    int **array2D = allocateArray2D(sizeof(int), subarrays, NULL);
+    assert(!releaseArray2D(array2D));
+    printf("test_releaseArray2D_afterAllocateArray2D: ok\n");
+}
+
+void test_releaseArray2D_afterAllocateArray2DAcquireArray2D() {
+    const size_t subarrays = 5;
+    int **array2D = allocateArray2D(sizeof(int), subarrays, NULL);
+    int **array2Dacq = acquireArray2D(array2D);
+    assert(releaseArray2D(array2D));
+    size_t *counter = (size_t *)array2Dacq - 1;
+    assert(*counter == 1);
+    size_t *len = counter - 1;
+    assert(*len == subarrays);
+    size_t *counter_i;
+    void(**dtor_i)(void *);
+    for (size_t i = 0; i < subarrays; i++) {
+        counter_i = (size_t *)array2Dacq[i] - 1;
+        assert(*counter_i == 1);
+        dtor_i = (void(**)(void *))counter_i - 1;
+        assert(*dtor_i == NULL);
+        free(dtor_i);
+    }
+    free(len);
+    printf("test_releaseArray2D_afterAllocateArray2DAcquireArray2D: ok\n");
 }

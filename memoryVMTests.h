@@ -3,6 +3,21 @@
 #include "memoryVM.h"
 #include "memoryVMObject.h"
 
+
+/**
+ * @brief initArray
+ * @param array
+ * @param dims
+ * @return
+ */
+int initArray(void *array, void *dims[2]);
+
+/**
+ * @brief freeArray
+ * @param array
+ */
+void freeArray(void *array);
+
 /**
  * @brief test_allocate_zero
  */
@@ -37,20 +52,6 @@ void test_allocateArray2D_zeroSubs();
  * @brief test_allocateArray2D_allzeros
  */
 void test_allocateArray2D_allzeros();
-
-/**
- * @brief initArray
- * @param array
- * @param dims
- * @return
- */
-int initArray(void *array, void *dims[2]);
-
-/**
- * @brief freeArray
- * @param array
- */
-void freeArray(void *array);
 
 /**
  * @brief test_allocateNew_noParams
@@ -96,3 +97,13 @@ void test_release_afterAllocateAcquire();
  * @brief test_release_afterAllocateNewAcquire
  */
 void test_release_afterAllocateNewAcquire();
+
+/**
+ * @brief test_releaseArray2D_afterAllocateArray2D
+ */
+void test_releaseArray2D_afterAllocateArray2D();
+
+/**
+ * @brief test_releaseArray2D_afterAllocateArray2DAcquireArray2D
+ */
+void test_releaseArray2D_afterAllocateArray2DAcquireArray2D();

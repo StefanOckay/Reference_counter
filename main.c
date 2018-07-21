@@ -21,5 +21,7 @@ int main()
     test_release_afterAllocateNew();
     test_release_afterAllocateAcquire();
     test_release_afterAllocateNewAcquire();
+    test_releaseArray2D_afterAllocateArray2D();
+    test_releaseArray2D_afterAllocateArray2DAcquireArray2D();
     return 0;
 }

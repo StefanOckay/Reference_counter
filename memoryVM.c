@@ -58,7 +58,7 @@ void **allocateOuterArray(size_t subarrays)
  * @param elementCounts
  * @return
  */
-void **allocateArray2D(size_t elementSize, size_t subarrays, size_t *elementCounts)
+void *allocateArray2D(size_t elementSize, size_t subarrays, size_t *elementCounts)
 {
     void **array2D = allocateOuterArray(subarrays);
     if (array2D == NULL) {
@@ -99,8 +99,9 @@ void *acquire(void *memory)
  * @brief acquireArray2D
  * @param array
  */
-void **acquireArray2D(void **array)
+void *acquireArray2D(void *array2D)
 {
+    void **array = array2D;
     if (array == NULL) {
         return NULL;
     }
@@ -140,8 +141,9 @@ int release(void *memory)
  * @param array
  * @return
  */
-int releaseArray2D(void **array)
+int releaseArray2D(void *array2D)
 {
+    void **array = array2D;
     if (array == NULL) {
         return 1;
     }
