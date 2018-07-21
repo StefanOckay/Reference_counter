@@ -10,7 +10,7 @@ void *allocate(size_t size)
 {
     void(**dtor__counter__memory)(void *) = malloc(size + sizeof(size_t) + sizeof(void *));
     if (dtor__counter__memory == NULL) {
-        perror("dtor__counter__memory");
+        perror("allocate");
         return NULL;
     }
     *dtor__counter__memory = NULL;
@@ -41,7 +41,7 @@ void **allocateOuterArray(size_t subarrays)
     size_t range = subarrays * sizeof(void *) + 2 * sizeof(size_t);
     size_t *length__counter__array = malloc(range);
     if (length__counter__array == NULL) {
-        perror("length__counter__array");
+        perror("allocateOuterArray");
         return NULL;
     }
     memset(length__counter__array, 0, range);

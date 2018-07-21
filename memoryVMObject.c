@@ -10,7 +10,7 @@ void *allocateNew(size_t size, int(*ctor)(void *, void **), void(*dtor)(void *),
     size_t range = sizeof(void (*)(void *)) + sizeof(size_t) + size;
     void (**dtor__counter__memory)(void *) = malloc(range);
     if (dtor__counter__memory == NULL) {
-        perror("dtor__counter__memory");
+        perror("allocateNew");
         return NULL;
     }
     *dtor__counter__memory = dtor;
