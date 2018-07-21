@@ -9,7 +9,7 @@ void test_allocate_zero()
     void(**dtor__counter__memory)(void *) = (void(**)(void *))counter__memory - 1;
     assert(*dtor__counter__memory == NULL);
     free(dtor__counter__memory);
-    printf("test_allocate_zero: passed\n");
+    printf("test_allocate_zero: ok\n");
 }
 
 void test_allocate()
@@ -23,7 +23,7 @@ void test_allocate()
         assert(memory[i] == 0);
     }
     free(dtor__counter__memory);
-    printf("test_allocate: passed\n");
+    printf("test_allocate: ok\n");
 }
 
 void test_allocateArray2D()
@@ -51,7 +51,7 @@ void test_allocateArray2D()
         free(dtor__counter__arrayi);
     }
     free(length__counter__array);
-    printf("test_allocateArray2D: passed\n");
+    printf("test_allocateArray2D: ok\n");
 }
 
 void test_allocateArray2D_NULL()
@@ -75,7 +75,7 @@ void test_allocateArray2D_NULL()
         free(dtor__counter__array_i);
     }
     free(length__counter__array);
-    printf("test_allocateArray2D_NULL: passed\n");
+    printf("test_allocateArray2D_NULL: ok\n");
 }
 
 void test_allocateArray2D_zeroSize()
@@ -96,7 +96,7 @@ void test_allocateArray2D_zeroSize()
         free(dtor__counter__array_i);
     }
     free(length__counter__array);
-    printf("test_allocateArray2D_zeroSize: passed\n");
+    printf("test_allocateArray2D_zeroSize: ok\n");
 }
 
 void test_allocateArray2D_zeroSubs()
@@ -107,7 +107,7 @@ void test_allocateArray2D_zeroSubs()
     size_t *length__counter__array = counter__array - 1;
     assert(*length__counter__array == 0);
     free(length__counter__array);
-    printf("test_allocateArray2D_zeroSubs: passed\n");
+    printf("test_allocateArray2D_zeroSubs: ok\n");
 }
 
 void test_allocateArray2D_allzeros()
@@ -118,7 +118,7 @@ void test_allocateArray2D_allzeros()
     size_t *length__counter__array = counter__array - 1;
     assert(*length__counter__array == 0);
     free(length__counter__array);
-    printf("test_allocateArray2D_allzeros: passed\n");
+    printf("test_allocateArray2D_allzeros: ok\n");
 }
 
 int initArray(void *array, void *dims[2])
@@ -154,7 +154,7 @@ void test_allocateNew_noParams() {
     void (**dtor__counter__array)(void *) = (void (**)(void *))counter__array - 1;
     assert(*dtor__counter__array == freeArray);
     free(dtor__counter__array);
-    printf("test_allocateNew_noParams: passed\n");
+    printf("test_allocateNew_noParams: ok\n");
 }
 
 void test_allocateNew() {
@@ -172,7 +172,7 @@ void test_allocateNew() {
     void (**dtor__counter__array)(void *) = (void (**)(void *))counter__array - 1;
     assert(*dtor__counter__array == freeArray);
     free(dtor__counter__array);
-    printf("test_allocateNew: passed\n");
+    printf("test_allocateNew: ok\n");
 }
 
 void test_acquire_afterAllocate() {
@@ -185,7 +185,7 @@ void test_acquire_afterAllocate() {
     void (**dtor)(void *) = (void (**)(void *))counter - 1;
     assert(*dtor == NULL);
     free(dtor);
-    printf("test_acquire_afterAllocate: passed(valid only if allocate tests have passed)\n");
+    printf("test_acquire_afterAllocate: ok\n");
 }
 
 void test_acquire_afterAllocateNew() {
@@ -202,7 +202,7 @@ void test_acquire_afterAllocateNew() {
     void (**dtor)(void *) = (void (**)(void *))counter - 1;
     assert(*dtor == freeArray);
     free(dtor);
-    printf("test_acquire_afterAllocateNew: passed(valid only if allocateNew tests have passed)\n");
+    printf("test_acquire_afterAllocateNew: ok\n");
 }
 
 void test_acquireArray2D() {
@@ -224,13 +224,13 @@ void test_acquireArray2D() {
         free(dtor_i);
     }
     free(len);
-    printf("test_acquireArray2D: passed(valid only if allocateArray2D tests have passed)\n");
+    printf("test_acquireArray2D: ok\n");
 }
 
 void test_release_afterAllocate() {
     void *memory = allocate(5 * sizeof(int));
     assert(!release(memory));
-    printf("test_release_afterAllocate: passed(valid only if allocate tests have passed)\n");
+    printf("test_release_afterAllocate: ok\n");
 }
 
 void test_release_afterAllocateNew() {
@@ -241,7 +241,7 @@ void test_release_afterAllocateNew() {
     dims[1] = &els;
     void *memory = allocateNew(el_size * els, initArray, freeArray, dims);
     assert(!release(memory));
-    printf("test_release_afterAllocateNew: passed(valid only if allocateNew tests have passed)\n");
+    printf("test_release_afterAllocateNew: ok\n");
 }
 
 void test_release_afterAllocateAcquire() {
@@ -253,7 +253,7 @@ void test_release_afterAllocateAcquire() {
     void (**dtor)(void *) = (void (**)(void *))counter - 1;
     assert(*dtor == NULL);
     free(dtor);
-    printf("test_release_afterAllocateAcquire: passed(valid only if allocate and acquire tests have passed)\n");
+    printf("test_release_afterAllocateAcquire: ok\n");
 }
 
 void test_release_afterAllocateNewAcquire() {
@@ -270,5 +270,5 @@ void test_release_afterAllocateNewAcquire() {
     void (**dtor)(void *) = (void (**)(void *))counter - 1;
     assert(*dtor == freeArray);
     free(dtor);
-    printf("test_release_afterAllocateNewAcquire: passed(valid only if allocateNew and acquire tests have passed)\n");
+    printf("test_release_afterAllocateNewAcquire: ok\n");
 }
