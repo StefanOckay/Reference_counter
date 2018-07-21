@@ -40,12 +40,14 @@ void **allocateArray2D(size_t elementSize, size_t subarrays, size_t *elementCoun
 /**
  * @brief acquire
  * @param memory
+ * @return
  */
 void *acquire(void *memory);
 
 /**
  * @brief acquireArray2D
  * @param array
+ * @return
  */
 void **acquireArray2D(void **array);
 

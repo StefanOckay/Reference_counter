@@ -91,9 +91,6 @@ void *acquire(void *memory)
         return NULL;
     }
     size_t *counter__memory = (size_t *)memory - 1;
-    if (counter__memory == 0) {
-        return NULL;
-    }
     *counter__memory += 1;
     return memory;
 }
@@ -105,10 +102,6 @@ void *acquire(void *memory)
 void **acquireArray2D(void **array)
 {
     if (array == NULL) {
-        return NULL;
-    }
-    size_t *counter_array = (size_t *)array - 1;
-    if (*counter_array == 0) {
         return NULL;
     }
     acquire(array);
