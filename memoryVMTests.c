@@ -252,6 +252,7 @@ void test_release_afterAllocateAcquire() {
     assert(*counter == 1);
     void (**dtor)(void *) = (void (**)(void *))counter - 1;
     assert(*dtor == NULL);
+    free(dtor);
     printf("test_release_afterAllocateAcquire: passed(valid only if allocate and acquire tests have passed)\n");
 }
 
@@ -268,5 +269,6 @@ void test_release_afterAllocateNewAcquire() {
     assert(*counter == 1);
     void (**dtor)(void *) = (void (**)(void *))counter - 1;
     assert(*dtor == freeArray);
+    free(dtor);
     printf("test_release_afterAllocateNewAcquire: passed(valid only if allocateNew and acquire tests have passed)\n");
 }
