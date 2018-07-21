@@ -1,7 +1,6 @@
 #include <assert.h>
 
 #include "memoryVM.h"
-#include "memoryVMObject.h"
 
 
 /**

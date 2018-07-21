@@ -1,5 +1,4 @@
 #include "memoryVM.h"
-#include "memoryVMObject.h"
 #include "memoryVMTests.h"
 
 

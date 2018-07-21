@@ -38,6 +38,14 @@ void **allocateOuterArray(size_t subarrays);
 void *allocateArray2D(size_t elementSize, size_t subarrays, size_t *elementCounts);
 
 /**
+ * @brief allocateNew
+ * @param size
+ * @param params
+ * @return
+ */
+void *allocateNew(size_t size, int(*ctor)(void *, void **), void(*dtor)(void *), void **params);
+
+/**
  * @brief acquire
  * @param memory
  * @return
