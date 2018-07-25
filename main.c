@@ -1,5 +1,5 @@
-#include "memoryVM.h"
-#include "memoryVMTests.h"
+#include "memoryRC.h"
+#include "memoryRCTests.h"
 
 
 int main()
