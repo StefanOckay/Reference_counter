@@ -1,11 +1,6 @@
 #include "memoryVM.h"
 
 
-/**
- * @brief allocate
- * @param size
- * @return
- */
 void *allocate(size_t size)
 {
     void(**dtor__counter__memory)(void *) = malloc(size + sizeof(size_t) + sizeof(void *));
@@ -20,22 +15,11 @@ void *allocate(size_t size)
     return (void *)(counter__memory + 1);
 }
 
-/**
- * @brief allocateArray
- * @param elementSize
- * @param elementCount
- * @return
- */
 void *allocateArray(size_t elementSize, size_t elementCount)
 {
     return allocate(elementSize * elementCount);
 }
 
-/**
- * @brief allocateOuterArray allocates array of pointers to arrays for 2D array
- * @param subarrays number of arrays pointed to by pointers of array being allocated
- * @return the allocated array
- */
 void **allocateOuterArray(size_t subarrays)
 {
     size_t range = subarrays * sizeof(void *) + 2 * sizeof(size_t);
@@ -51,13 +35,6 @@ void **allocateOuterArray(size_t subarrays)
     return (void **)(counter__array + 1);
 }
 
-/**
- * @brief allocateArray2D
- * @param elementSize
- * @param subarrays
- * @param elementCounts
- * @return
- */
 void *allocateArray2D(size_t elementSize, size_t subarrays, size_t *elementCounts)
 {
     void **array2D = allocateOuterArray(subarrays);
@@ -104,10 +81,6 @@ void *allocateNew(size_t size, int(*ctor)(void *, void **), void(*dtor)(void *),
     return memory;
 }
 
-/**
- * @brief acquire
- * @param memory
- */
 void *acquire(void *memory)
 {
     if (memory == NULL) {
@@ -118,10 +91,6 @@ void *acquire(void *memory)
     return memory;
 }
 
-/**
- * @brief acquireArray2D
- * @param array
- */
 void *acquireArray2D(void *array2D)
 {
     void **array = array2D;
@@ -136,11 +105,6 @@ void *acquireArray2D(void *array2D)
     return array;
 }
 
-/**
- * @brief release
- * @param memory
- * @return
- */
 int release(void *memory)
 {
     if (memory == NULL) {
@@ -159,11 +123,6 @@ int release(void *memory)
     return 1;
 }
 
-/**
- * @brief releaseArray2D
- * @param array
- * @return
- */
 int releaseArray2D(void *array2D)
 {
     void **array = array2D;
