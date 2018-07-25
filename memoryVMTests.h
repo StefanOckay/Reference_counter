@@ -4,7 +4,7 @@
 
 
 /**
- * @brief initArray
+ * @brief initArray .. constructor for tests
  * @param array
  * @param dims
  * @return
@@ -12,7 +12,7 @@
 int initArray(void *array, void *dims[2]);
 
 /**
- * @brief freeArray
+ * @brief freeArray .. destructor for tests
  * @param array
  */
 void freeArray(void *array);
